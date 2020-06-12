@@ -1,29 +1,38 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "components/Application.scss";
 import DayList from "components/DayList.js"
+import Appointment from "components/Appointment/index"
+import  getAppointmentsForDay  from "../helpers/selectors"
+import  { getInterview } from "../helpers/selectors"
 
-const days = [
-  {
-    id: 1,
-    name: "Monday",
-    spots: 2,
-  },
-  {
-    id: 2,
-    name: "Tuesday",
-    spots: 5,
-  },
-  {
-    id: 3,
-    name: "Wednesday",
-    spots: 0,
-  },
-];
 
 export default function Application(props) {
+  
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {}
+  });
 
-  const [day, changeDate] = useState("Monday")
+  const setDay = day => setState({...state, day})
+
+  useEffect(() => {
+    Promise.all([
+      Promise.resolve(axios.get("/api/days")),
+      Promise.resolve(axios.get("/api/appointments")),
+      Promise.resolve(axios.get("/api/interviewers"))
+    ])
+    .then((all) =>  {
+      setState(prev => ({days: all[0].data, appointments: all[1].data, interviewers: all[2].data}) )
+      //console.log(all)
+    })
+    .catch((response) => console.log(response))
+
+  },[])
+//const appointments = getAppointmentsForDay(state, state.day)
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -35,9 +44,9 @@ export default function Application(props) {
 <hr className="sidebar__separator sidebar--centered" />
 <nav className="sidebar__menu">
 <DayList
-  days={days}
-  day={day}
-  setDay={day => changeDate(day)}
+  days={state.days}
+  day={state.day}
+  setDay={day => setDay(day)}
 />
 </nav>
 <img
@@ -47,7 +56,18 @@ export default function Application(props) {
 />
       </section>
       <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
+        <li>
+        {getAppointmentsForDay(state, state.day).map( (appointment) => {
+          const interview = getInterview(state, appointment.interview);
+          return(
+            <Appointment 
+            key={appointment.id}
+            id={appointment.id}
+            time={appointment.time}
+            interview={interview}
+            />)
+        
+        })}</li>
       </section>
     </main>
   );
