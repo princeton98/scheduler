@@ -5,6 +5,7 @@ import DayList from "components/DayList.js"
 import Appointment from "components/Appointment/index"
 import  getAppointmentsForDay  from "../helpers/selectors"
 import  { getInterview } from "../helpers/selectors"
+import { getInterviewersForDay } from "../helpers/selectors"
 
 
 export default function Application(props) {
@@ -15,6 +16,36 @@ export default function Application(props) {
     appointments: {},
     interviewers: {}
   });
+
+  function bookInterview(id, interview, callback) {
+    const appointment = {
+     ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    axios.put(`/api/appointments/${id}`, {interview})
+    .then (response => {
+      console.log("hello")
+      setState({...state, appointments})
+      callback("SHOW")
+    })
+    .catch (response => console.log(response));
+    //setState(prev => ({...state, appointments}));
+    
+    console.log(id, interview);
+  }
+
+  function cancelInterview(id, interview, callback) {
+    axios.delete(`/api/appointments/${id}`, {interview})
+    .then (response => {
+      setState({...state})
+      callback("EMPTY")
+    })
+    .catch(response => console.log(response))
+  }
 
   const setDay = day => setState({...state, day})
 
@@ -59,12 +90,16 @@ export default function Application(props) {
         <li>
         {getAppointmentsForDay(state, state.day).map( (appointment) => {
           const interview = getInterview(state, appointment.interview);
+          const interviewers = getInterviewersForDay(state, state.day);
           return(
             <Appointment 
             key={appointment.id}
             id={appointment.id}
             time={appointment.time}
             interview={interview}
+            interviewers={interviewers}
+            bookInterview={bookInterview}
+            cancelInterview={cancelInterview}
             />)
         
         })}</li>
