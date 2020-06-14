@@ -17,7 +17,7 @@ export default function Application(props) {
     interviewers: {}
   });
 
-  function bookInterview(id, interview, callback) {
+  const bookInterview =  async (id, interview) => {
     const appointment = {
      ...state.appointments[id],
       interview: { ...interview }
@@ -26,25 +26,14 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     };
-    axios.put(`/api/appointments/${id}`, {interview})
-    .then (response => {
-      console.log("hello")
-      setState({...state, appointments})
-      callback("SHOW")
-    })
-    .catch (response => console.log(response));
-    //setState(prev => ({...state, appointments}));
-    
-    console.log(id, interview);
+    await axios.put(`/api/appointments/${id}`, {interview});
+    setState({...state,appointments});
+    return appointments;
   }
 
-  function cancelInterview(id, interview, callback) {
-    axios.delete(`/api/appointments/${id}`, {interview})
-    .then (response => {
+  const cancelInterview = async (id, interview) => {
+    await axios.delete(`/api/appointments/${id}`, {interview})
       setState({...state})
-      callback("EMPTY")
-    })
-    .catch(response => console.log(response))
   }
 
   const setDay = day => setState({...state, day})
