@@ -43,6 +43,7 @@ const appointments = getAppointmentsForDay(state, state.day).map(
 <hr className="sidebar__separator sidebar--centered" />
 <nav className="sidebar__menu">
 <DayList
+  key={props.id}
   days={state.days}
   day={state.day}
   setDay={day => setDay(day)}

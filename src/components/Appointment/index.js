@@ -68,6 +68,7 @@ export default function Appointment(props) {
       )}
       {mode === CREATE && (
         <Form
+          key={props.id}
           interviewers={props.interviewers}
           name={props.name}
           interviewer={props.interviewer}
@@ -79,6 +80,7 @@ export default function Appointment(props) {
       {mode === DELETING && <Status message="Deleting" />}
       {mode === CONFIRM && <Confirm message="Are you sure you would like to delete?" onConfirm={remove} onCancel={() => transition("SHOW")} />}
       {mode === EDIT && (<Form
+        key={props.id}
         interviewers={props.interviewers}
         name={props.interview.student}
         interviewer={props.interview.interviewer.id}
