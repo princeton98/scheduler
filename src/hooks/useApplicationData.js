@@ -81,7 +81,7 @@ export default function useApplicationData() {
     ])
       .then((all) => {
         setState(prev => ({
-          days: all[0].data, appointments: all[1].data, interviewers: all[2].data
+         ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data
         }))
         //console.log(all)
       })
