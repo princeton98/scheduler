@@ -32,7 +32,7 @@ export default function Appointment(props) {
         transition(SHOW);
       })
       .catch(response => {
-        console.log("TRANSITION TO ERROR STATE");
+        console.log(response)
         transition(ERROR_SAVE, true)
       });
   }
@@ -53,7 +53,7 @@ export default function Appointment(props) {
   }
   //console.log(props.interview.interviewer)
   return (
-    <article className="appointment">
+    <article data-testid="appointment" className="appointment">
       <Header time={props.time} />
       {mode === ERROR_SAVE && <Error error="Could not save appointment" onClose={back}/>}
       {mode === ERROR_DELETE && <Error error="Could not delete appointment" onClose={back}/>}

@@ -35,18 +35,20 @@ export default function useApplicationData() {
       ...state.appointments[id],
       interview: { ...interview }
     };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
     let dayId = appointmentIdToDayId(id)
+    const days = state.days;
+    if (!state.appointments[id].interview) {
     const updatedDay = {
       ...state.days[dayId - 1],
       spots: state.days[dayId - 1].spots - 1
     }
-    const days = state.days;
     days[dayId - 1] = updatedDay;
-
+  }
+  const appointments = {
+    ...state.appointments,
+    [id]: appointment
+  };
+  
     // const days = state.days.map(day=> {
     //   if(day.id !== newId) return day;
     //   return updatedDay;
