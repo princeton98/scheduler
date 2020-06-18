@@ -20,7 +20,7 @@ export const ERROR_SAVE = "ERROR_SAVE";
 export const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
-  const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY)
+  const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
   function save(name, interviewer) {
     const interview = {
       student: name,
@@ -28,12 +28,12 @@ export default function Appointment(props) {
     };
     transition(SAVING)
     props.bookInterview(props.id, interview, transition)
-      .then(appointments => {
+      .then(response => {
         transition(SHOW);
       })
       .catch(response => {
-        console.log(response)
-        transition(ERROR_SAVE, true)
+        transition(ERROR_SAVE);
+        console.log(mode)
       });
   }
 
@@ -42,20 +42,21 @@ export default function Appointment(props) {
       student: name,
       interviewer
     };
-    transition(DELETING)
+    transition(DELETING);
     props.cancelInterview(props.id, interview, transition)
-    .then ((response) => {
-      transition(EMPTY)
-    })
-    .catch((response) => {
-      transition(ERROR_DELETE, true)
-    })
+      .then((response) => {
+        transition(EMPTY);
+      })
+      .catch((response) => {
+        transition(ERROR_DELETE, true)
+        console.log(mode)
+      })
   }
   return (
     <article data-testid="appointment" className="appointment">
       <Header time={props.time} />
-      {mode === ERROR_SAVE && <Error error="Could not save appointment" onClose={back}/>}
-      {mode === ERROR_DELETE && <Error error="Could not delete appointment" onClose={back}/>}
+      {mode === ERROR_SAVE && <Error error="Could not save appointment" onClose={back} />}
+      {mode === ERROR_DELETE && <Error error="Could not delete appointment" onClose={back} />}
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && (
         <Show
@@ -86,5 +87,5 @@ export default function Appointment(props) {
         onSave={save}
         onCancel={back}
         interview={props.bookInterview} />)}
-    </article>)
+    </article>);
 }

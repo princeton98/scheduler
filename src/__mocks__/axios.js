@@ -56,7 +56,7 @@ const fixtures = {
 };
 
 export default {
-  defaults: { baseURL: ""},
+  defaults: { baseURL: "" },
   get: jest.fn(url => {
     switch (url) {
       case "/api/days": {
@@ -102,4 +102,4 @@ export default {
   })
 
 
-  }
+}

@@ -3,7 +3,7 @@ import { render } from "@testing-library/react"
 import Appointment from "../Appointment/index"
 
 describe("Appointment", () => {
-  xit("renders without crashing", () => {
+  it("renders without crashing", () => {
     render(<Appointment />);
   })
 })

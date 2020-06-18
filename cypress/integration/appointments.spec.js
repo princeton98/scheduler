@@ -1,5 +1,5 @@
 describe("Appointments", () => {
-  beforeEach (() => {
+  beforeEach(() => {
     cy.request("GET", "/api/debug/reset");
     cy.visit("/");
     cy.contains("Monday");
@@ -14,7 +14,7 @@ describe("Appointments", () => {
   })
 
   it("should edit an interview", () => {
-    cy.get("[alt=Edit]").first().click({force: true});
+    cy.get("[alt=Edit]").first().click({ force: true });
     cy.get("[data-testid=student-name-input]").clear().type("Brian Griffin");
     cy.get("[alt='Tori Malcolm']").click();
     cy.contains("Save").click();
@@ -23,7 +23,7 @@ describe("Appointments", () => {
   })
 
   it("should cancel an interview", () => {
-    cy.get("[alt=Delete]").first().click({force: true});
+    cy.get("[alt=Delete]").first().click({ force: true });
     cy.contains("Confirm").click();
     cy.contains("Deleting").should("exist");
     cy.contains("Deleting").should("not.exist");

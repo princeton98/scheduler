@@ -10,7 +10,7 @@ export default function useApplicationData() {
   });
 
   const appointmentIdToDayId = (id) => {
-
+// appointment ID can find the dayID through intervals of 5
     let newId
     if (id >= 1 && id <= 5) {
       newId = 1
@@ -31,30 +31,26 @@ export default function useApplicationData() {
   }
 
   const bookInterview = async (id, interview) => {
+    // setting new appointments object to update database
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
     };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    
+    // setting new days object to update spots remaining on DayList
     let dayId = appointmentIdToDayId(id)
     const days = state.days;
     if (!state.appointments[id].interview) {
-    const updatedDay = {
-      ...state.days[dayId - 1],
-      spots: state.days[dayId - 1].spots - 1
+      const updatedDay = {
+        ...state.days[dayId - 1],
+        spots: state.days[dayId - 1].spots - 1
+      }
+      days[dayId - 1] = updatedDay;
     }
-    days[dayId - 1] = updatedDay;
-  }
-  const appointments = {
-    ...state.appointments,
-    [id]: appointment
-  };
-  
-    // const days = state.days.map(day=> {
-    //   if(day.id !== newId) return day;
-    //   return updatedDay;
-    // });
-
-
 
     await axios.put(`/api/appointments/${id}`, { interview });
     setState({ ...state, appointments, days });
@@ -62,6 +58,7 @@ export default function useApplicationData() {
   }
 
   const cancelInterview = async (id, interview) => {
+    // same format as bookInterview, just adding a spot for spots remaining due to the removal of an interview
     let dayId = appointmentIdToDayId(id)
     const updatedDay = {
       ...state.days[dayId - 1],
@@ -69,11 +66,11 @@ export default function useApplicationData() {
     }
     const days = state.days;
     days[dayId - 1] = updatedDay;
-    await axios.delete(`/api/appointments/${id}`, { interview })
-    setState({ ...state, days })
+    await axios.delete(`/api/appointments/${id}`, { interview });
+    setState({ ...state, days });
   }
 
-  const setDay = day => setState({ ...state, day })
+  const setDay = day => setState({ ...state, day });
 
   useEffect(() => {
     Promise.all([
@@ -83,13 +80,11 @@ export default function useApplicationData() {
     ])
       .then((all) => {
         setState(prev => ({
-         ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data
-        }))
-        //console.log(all)
+          ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data
+        }));
       })
-      .catch((response) => console.log(response))
-
-  }, [])
+      .catch((response) => console.log(response));
+  }, []);
 
   return { state, setDay, bookInterview, cancelInterview }
 }
