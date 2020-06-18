@@ -32,7 +32,7 @@ export default function Appointment(props) {
         transition(SHOW);
       })
       .catch(response => {
-        transition(ERROR_SAVE);
+        transition(ERROR_SAVE, true);
         console.log(mode)
       });
   }
@@ -42,9 +42,10 @@ export default function Appointment(props) {
       student: name,
       interviewer
     };
-    transition(DELETING);
+    transition(DELETING, true);
     props.cancelInterview(props.id, interview, transition)
       .then((response) => {
+        console.log("this is the cancel",mode);
         transition(EMPTY);
       })
       .catch((response) => {
@@ -78,7 +79,7 @@ export default function Appointment(props) {
       )}
       {mode === SAVING && <Status message="Saving" />}
       {mode === DELETING && <Status message="Deleting" />}
-      {mode === CONFIRM && <Confirm message="Are you sure you would like to delete?" onConfirm={remove} onCancel={() => transition("SHOW")} />}
+      {mode === CONFIRM && <Confirm message="Are you sure you would like to delete?" onConfirm={remove} onCancel={() => transition(SHOW)} />}
       {mode === EDIT && (<Form
         key={props.id}
         interviewers={props.interviewers}
