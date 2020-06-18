@@ -10,20 +10,20 @@
   return arr
 }
 
-export  function getInterview(state, interview) {
+export  function getInterview(state, appointment) {
   let obj = {}
   // return object, insert state, containing interview data
   // pass in an object that contains the interviewer
   //so it returns the interview with the added interviewer object
-  if (interview === null) {
+  if (appointment === null || appointment.interview === null) {
     return null;
   }
-  const idNum = interview.interviewer
+  const idNum = appointment.interview.interviewer
   for (let key in state.appointments ) {
     if (state.appointments[key].interview === null) {
       
     }
-    else if (state.appointments[key].interview.interviewer === idNum) {
+    else if (state.appointments[key].id === appointment.id) {
       obj.student = state.appointments[key].interview.student
       //obj.idNum.student = state.appointments[key].interview.student
       obj.interviewer = {

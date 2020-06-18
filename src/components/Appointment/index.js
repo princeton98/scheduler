@@ -51,7 +51,6 @@ export default function Appointment(props) {
       transition(ERROR_DELETE, true)
     })
   }
-  //console.log(props.interview.interviewer)
   return (
     <article data-testid="appointment" className="appointment">
       <Header time={props.time} />
@@ -63,7 +62,7 @@ export default function Appointment(props) {
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onDelete={() => transition(CONFIRM)}
-          onEdit={() => transition("EDIT")}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CREATE && (
